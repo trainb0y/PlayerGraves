@@ -1,7 +1,5 @@
 package io.github.trainb0y1.playergraves
 
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.Component.text
 import org.bukkit.Material
 import org.bukkit.block.Chest
 import org.bukkit.event.EventHandler
