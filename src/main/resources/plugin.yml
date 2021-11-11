@@ -1,5 +1,5 @@
 main: io.github.trainb0y1.playergraves.PlayerGraves
-name: Player Graves
+name: PlayerGraves
 version: 0.1.0-dev
 description: A simple plugin that puts player's loot in chests on death
 api-version: 1.17
