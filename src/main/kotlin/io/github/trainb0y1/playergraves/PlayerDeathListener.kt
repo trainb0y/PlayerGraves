@@ -5,6 +5,7 @@ import org.bukkit.block.Chest
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.PlayerDeathEvent
+import org.bukkit.inventory.ItemStack
 
 class PlayerDeathListener: Listener {
 
@@ -21,13 +22,14 @@ class PlayerDeathListener: Listener {
 		if (player.inventory.isEmpty) return
 
 		// Find out where we need to place the chest
-		// Needs to be a 2 block tall space of air
+		// Needs to be a 2 block tall space of not solid block
 		var loc = player.location
-		while (loc.block.type != Material.AIR || loc.clone().add(0.0,1.0,0.0).block.type != Material.AIR){
+		while (loc.block.type.isSolid|| loc.clone().add(0.0,1.0,0.0).block.type.isSolid){
 			loc.y++
 		}
 
 		// Create the chest
+		val replacedBlocks = mutableSetOf<ItemStack>(ItemStack(loc.block.type))
 		loc.block.type = Material.CHEST
 		var chest = loc.block.state as Chest
 
@@ -37,6 +39,7 @@ class PlayerDeathListener: Listener {
 				if (chest.inventory.addItem(it).isNotEmpty()) {
 					// Chest couldn't fit, make another chest above it
 					loc.add(0.0,1.0,0.0)
+					replacedBlocks.add(ItemStack(loc.block.type))
 					loc.block.type = Material.CHEST
 					chest = loc.block.state as Chest
 
@@ -44,6 +47,11 @@ class PlayerDeathListener: Listener {
 					chest.inventory.addItem(it)
 				}
 			}
+		}
+
+		// Drop any replaced blocks
+		replacedBlocks.forEach{
+			loc.world.dropItem(loc, it)
 		}
 
 		// Don't want to drop the items
