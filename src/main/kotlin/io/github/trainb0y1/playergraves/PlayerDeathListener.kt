@@ -51,7 +51,8 @@ class PlayerDeathListener: Listener {
 
 		// Drop any replaced blocks
 		replacedBlocks.forEach{
-			if (!it.type.isAir) loc.world.dropItem(loc, it)
+			try {loc.world.dropItem(loc, it)}
+			catch (e: IllegalArgumentException){} // was probably air or water, which can't be dropped
 		}
 
 		// Don't want to drop the items
