@@ -51,7 +51,7 @@ class PlayerDeathListener: Listener {
 
 		// Drop any replaced blocks
 		replacedBlocks.forEach{
-			loc.world.dropItem(loc, it)
+			if (!it.type.isAir) loc.world.dropItem(loc, it)
 		}
 
 		// Don't want to drop the items
