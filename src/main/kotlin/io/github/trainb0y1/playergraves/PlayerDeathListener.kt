@@ -2,6 +2,7 @@ package io.github.trainb0y1.playergraves
 
 import org.bukkit.Material
 import org.bukkit.block.Chest
+import org.bukkit.enchantments.Enchantment
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.PlayerDeathEvent
@@ -36,6 +37,7 @@ class PlayerDeathListener: Listener {
 		// Fill it
 		player.inventory.forEach {
 			it?.let {
+				if (it.containsEnchantment(Enchantment.VANISHING_CURSE)) return@forEach
 				if (chest.inventory.addItem(it).isNotEmpty()) {
 					// Chest couldn't fit, make another chest above it
 					loc.add(0.0,1.0,0.0)
@@ -57,5 +59,8 @@ class PlayerDeathListener: Listener {
 
 		// Don't want to drop the items
 		event.drops.clear()
+
+		// Tell the player where they died
+		player.sendMessage("You died at ${loc.blockX}, ${loc.blockY}, ${loc.blockZ}")
 	}
 }
